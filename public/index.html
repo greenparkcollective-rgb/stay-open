@@ -397,7 +397,7 @@
 
     <div class="letter-label">Your Letter <span>(feel free to edit it)</span></div>
     <textarea id="letter-body"></textarea>
-    <p class="hint">A copy will be CC'd to your email address.</p>
+    <p class="hint">Clicking Send It will open your email app with everything pre-filled — just hit send.</p>
 
     <button class="btn btn-send" id="send-btn" onclick="sendLetter()">Send It ♥</button>
   </div>
@@ -406,10 +406,10 @@
   <div class="screen" id="screen-success">
     <div class="success-wrap">
       <div class="success-heart">♥</div>
-      <div class="success-title">Letter Sent!</div>
+      <div class="success-title">Almost There!</div>
       <p class="success-body">
-        Your message has been sent to <strong id="success-mpp"></strong>.<br>
-        A copy has gone to your inbox.<br><br>
+        Your email app has opened with the letter ready to send to <strong id="success-mpp"></strong>.<br><br>
+        Just hit <strong>Send</strong> in your email app — you're done.<br><br>
         Thank you for speaking up. Every voice matters.
       </p>
       <div class="divider"></div>
@@ -556,39 +556,37 @@
 
     var btn = document.getElementById('send-btn');
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>Sending\u2026';
+    btn.innerHTML = '<span class="spinner"></span>Opening email\u2026';
 
-    try {
-      var resp = await fetch('/api/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name:       mppData.userName,
-          email:      mppData.userEmail,
-          postalCode: mppData.postalCode,
-          mppName:    mppData.name,
-          mppEmail:   mppData.email,
-          riding:     mppData.riding,
-          letter:     letter
-        })
-      });
+    // Log submission to server (fire and forget)
+    fetch('/api/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name:       mppData.userName,
+        email:      mppData.userEmail,
+        postalCode: mppData.postalCode,
+        mppName:    mppData.name,
+        mppEmail:   mppData.email,
+        riding:     mppData.riding
+      })
+    }).catch(function() {});
 
-      var data = await resp.json();
+    // Open mailto in email app
+    var subject = 'Please Protect Ontario\u2019s Supervised Consumption Sites \u2014 Constituent from ' + mppData.riding;
+    var mailtoUrl = 'mailto:' + mppData.email
+      + '?subject=' + encodeURIComponent(subject)
+      + '&body=' + encodeURIComponent(letter);
 
-      if (!resp.ok) {
-        showError(data.error || 'Failed to send. Please try again.');
-        return;
-      }
+    window.location.href = mailtoUrl;
 
+    // Show success screen after a short delay so mailto has time to open
+    setTimeout(function() {
       document.getElementById('success-mpp').textContent = mppData.name;
       showScreen('screen-success');
-
-    } catch (err) {
-      showError('Something went wrong. Please try again.');
-    } finally {
       btn.disabled = false;
       btn.textContent = 'Send It \u2665';
-    }
+    }, 800);
   }
 
   // Auto-format postal code as user types

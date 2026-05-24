@@ -1,5 +1,4 @@
 import express from 'express';
-import nodemailer from 'nodemailer';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -63,50 +62,25 @@ app.post('/api/lookup', async (req, res) => {
   }
 });
 
-// ── Send Email + Log ──────────────────────────────────────────────────────────
+// ── Log Submission ────────────────────────────────────────────────────────────
 
-app.post('/api/send', async (req, res) => {
+app.post('/api/send', (req, res) => {
   try {
-    const { name, email, postalCode, mppName, mppEmail, riding, letter } = req.body;
+    const { name, email, postalCode, mppName, mppEmail, riding } = req.body;
 
-    if (!name || !email || !postalCode || !mppEmail || !letter) {
+    if (!name || !email || !postalCode) {
       return res.status(400).json({ error: 'Missing required fields.' });
     }
-
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD
-      }
-    });
-
-    const htmlBody = letter
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/\n/g, '<br>')
-      .replace(/•/g, '&bull;');
-
-    await transporter.sendMail({
-      from:    `"Stay Open, Stay Alive" <${process.env.GMAIL_USER}>`,
-      to:      mppEmail,
-      cc:      email,
-      replyTo: email,
-      subject: `Please Protect Ontario's Supervised Consumption Sites — Constituent from ${riding}`,
-      text:    letter,
-      html:    `<div style="font-family:Georgia,serif;font-size:16px;line-height:1.8;max-width:600px;color:#222">${htmlBody}</div>`
-    });
 
     db.prepare(`
       INSERT INTO submissions (name, email, postal_code, mpp_name, mpp_email, riding)
       VALUES (?, ?, ?, ?, ?, ?)
-    `).run(name, email, postalCode, mppName, mppEmail || '', riding);
+    `).run(name, email, postalCode, mppName || '', mppEmail || '', riding || '');
 
     res.json({ ok: true });
   } catch (err) {
     console.error('[send]', err.message);
-    res.status(500).json({ error: 'Failed to send email. Please try again.' });
+    res.status(500).json({ error: 'Failed to log submission. Please try again.' });
   }
 });
 

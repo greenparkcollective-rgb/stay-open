@@ -38,13 +38,13 @@ app.post('/api/lookup', async (req, res) => {
     if (!postalCode) return res.status(400).json({ error: 'Postal code required' });
 
     const clean = postalCode.replace(/\s+/g, '').toUpperCase();
-    const url = `https://represent.opennorth.ca/representatives/ontario-legislature/?postcode=${clean}&format=json`;
+    const url = `https://represent.opennorth.ca/postcodes/${clean}/`;
 
     const resp = await fetch(url);
     if (!resp.ok) return res.status(404).json({ error: 'Could not reach MPP lookup service. Please try again.' });
 
     const data = await resp.json();
-    const rep = data.objects?.[0];
+    const rep = data.representatives_centroid?.find(r => r.elected_office === 'MPP');
 
     if (!rep) {
       return res.status(404).json({ error: 'No Ontario MPP found for this postal code. Please check the postal code and try again.' });

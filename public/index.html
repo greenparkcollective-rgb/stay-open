@@ -406,12 +406,24 @@
   <div class="screen" id="screen-success">
     <div class="success-wrap">
       <div class="success-heart">♥</div>
-      <div class="success-title">Almost There!</div>
+      <div class="success-title">One Tap Left</div>
       <p class="success-body">
-        Your email app has opened with the letter ready to send to <strong id="success-mpp"></strong>.<br><br>
-        Just hit <strong>Send</strong> in your email app — you're done.<br><br>
-        Thank you for speaking up. Every voice matters.
+        Your letter is ready for <strong id="success-mpp"></strong>.<br>
+        Tap the button below to open your email app — everything is pre-filled, just hit Send.
       </p>
+      <a id="mailto-btn" href="#" style="
+        display:block;
+        margin:1.5rem 0;
+        padding:1.1rem;
+        background:var(--pink);
+        color:#fff;
+        text-align:center;
+        border-radius:8px;
+        font-family:'Anton',sans-serif;
+        font-size:1.2rem;
+        letter-spacing:0.08em;
+        text-decoration:none;
+      ">Open Email App ♥</a>
       <div class="divider"></div>
       <p class="success-body" style="font-size:0.82rem">
         SCS saves lives. &nbsp;<strong>Care not closures. Keep our sites open.</strong>
@@ -572,21 +584,17 @@
       })
     }).catch(function() {});
 
-    // Open mailto in email app
+    // Build mailto link and set it on the button — user taps it directly (no shady dialog)
     var subject = 'Please Protect Ontario\u2019s Supervised Consumption Sites \u2014 Constituent from ' + mppData.riding;
     var mailtoUrl = 'mailto:' + mppData.email
       + '?subject=' + encodeURIComponent(subject)
       + '&body=' + encodeURIComponent(letter);
 
-    window.location.href = mailtoUrl;
-
-    // Show success screen after a short delay so mailto has time to open
-    setTimeout(function() {
-      document.getElementById('success-mpp').textContent = mppData.name;
-      showScreen('screen-success');
-      btn.disabled = false;
-      btn.textContent = 'Send It \u2665';
-    }, 800);
+    document.getElementById('mailto-btn').href = mailtoUrl;
+    document.getElementById('success-mpp').textContent = mppData.name;
+    showScreen('screen-success');
+    btn.disabled = false;
+    btn.textContent = 'Send It \u2665';
   }
 
   // Auto-format postal code as user types

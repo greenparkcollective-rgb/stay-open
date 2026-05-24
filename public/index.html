@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stay Open, Stay Alive — Contact Your MPP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0b08;
+      --surface: #1a1610;
+      --cream: #f0e4c8;
+      --pink: #e03d6a;
+      --teal: #2dbfbf;
+      --gold: #c9820a;
+      --muted: #8a7f6e;
+      --border: #2e2820;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--cream);
+      font-family: 'Lato', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── Header ── */
+    header {
+      width: 100%;
+      text-align: center;
+      padding: 2.5rem 1rem 1.75rem;
+      border-bottom: 1px solid var(--border);
+      background: radial-gradient(ellipse at top, #1f0d10 0%, var(--bg) 70%);
+    }
+
+    .headline {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(2.2rem, 10vw, 4rem);
+      letter-spacing: 0.03em;
+      line-height: 1;
+    }
+
+    .headline .line1 { color: var(--cream); }
+    .headline .line2 { color: var(--pink); }
+
+    .subhead {
+      font-size: clamp(0.7rem, 2vw, 0.875rem);
+      color: var(--teal);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 0.6rem;
+    }
+
+    .event-info {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Main ── */
+    main {
+      width: 100%;
+      max-width: 540px;
+      padding: 2rem 1.5rem 1rem;
+      flex: 1;
+    }
+
+    /* ── Screens ── */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ── Error ── */
+    .error-box {
+      background: rgba(224,61,106,0.12);
+      border: 1px solid var(--pink);
+      color: var(--pink);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      margin-bottom: 1.25rem;
+      display: none;
+    }
+
+    /* ── Form screen ── */
+    .form-title {
+      font-family: 'Anton', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.06em;
+      color: var(--teal);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-desc {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 1.75rem;
+    }
+
+    .field { margin-bottom: 1.1rem; }
+
+    label {
+      display: block;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--cream);
+      padding: 0.9rem 1rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.18s;
+      -webkit-appearance: none;
+    }
+
+    input:focus { border-color: var(--teal); }
+    input::placeholder { color: var(--muted); }
+
+    /* ── Buttons ── */
+    .btn {
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Anton', sans-serif;
+      font-size: 1.15rem;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: opacity 0.18s, transform 0.1s;
+      -webkit-appearance: none;
+    }
+
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .btn-find {
+      background: var(--teal);
+      color: #0d0b08;
+      margin-top: 0.5rem;
+    }
+
+    .btn-send {
+      background: var(--pink);
+      color: #fff;
+      font-size: 1.2rem;
+      margin-top: 1.25rem;
+    }
+
+    /* ── Letter screen ── */
+    .back-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 0.875rem;
+      cursor: pointer;
+      padding: 0;
+      margin-bottom: 1.5rem;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .back-btn:hover { color: var(--cream); }
+
+    .mpp-card {
+      background: var(--surface);
+      border: 1px solid var(--teal);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .mpp-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 0.3rem;
+    }
+
+    .mpp-name-text {
+      font-family: 'Anton', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 0.03em;
+      color: var(--cream);
+    }
+
+    .mpp-riding-text {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.15rem;
+    }
+
+    .mpp-email-text {
+      font-size: 0.78rem;
+      color: var(--teal);
+      margin-top: 0.25rem;
+      word-break: break-all;
+    }
+
+    .notice {
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      margin-bottom: 1.25rem;
+      display: none;
+    }
+
+    .notice-warn {
+      background: rgba(201,130,10,0.12);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+    }
+
+    .letter-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .letter-label span {
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 400;
+    }
+
+    textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--cream);
+      padding: 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: Georgia, serif;
+      line-height: 1.75;
+      resize: vertical;
+      min-height: 340px;
+      outline: none;
+      transition: border-color 0.18s;
+    }
+
+    textarea:focus { border-color: var(--teal); }
+
+    .hint {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+    }
+
+    /* ── Success screen ── */
+    .success-wrap {
+      text-align: center;
+      padding: 3rem 0 2rem;
+    }
+
+    .success-heart {
+      font-size: 3.5rem;
+      line-height: 1;
+      margin-bottom: 1rem;
+      color: var(--pink);
+    }
+
+    .success-title {
+      font-family: 'Anton', sans-serif;
+      font-size: 2.2rem;
+      letter-spacing: 0.05em;
+      color: var(--teal);
+      margin-bottom: 1rem;
+    }
+
+    .success-body {
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 0.95rem;
+    }
+
+    .success-body strong { color: var(--cream); }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 1.75rem 0;
+    }
+
+    /* ── Footer tags ── */
+    .tags {
+      display: flex;
+      gap: 1.25rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 1.5rem 1rem 0.5rem;
+    }
+
+    .tag {
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .tag::before { content: '♥ '; color: var(--pink); }
+
+    footer {
+      text-align: center;
+      padding: 1.25rem 1rem 2rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    /* ── Spinner ── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .spinner {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid rgba(255,255,255,0.25);
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: spin 0.65s linear infinite;
+      vertical-align: middle;
+      margin-right: 0.4rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="headline">
+    <div class="line1">STAY OPEN,</div>
+    <div class="line2">STAY ALIVE</div>
+  </div>
+  <div class="subhead">Rally for Ontario's Supervised Consumption Sites</div>
+  <div class="event-info">May 30th · Metropolitan United Church · 2PM</div>
+</header>
+
+<main>
+  <div class="error-box" id="error-msg"></div>
+
+  <!-- ── Screen 1: Form ── -->
+  <div class="screen active" id="screen-form">
+    <p class="form-title">Contact Your MPP Today</p>
+    <p class="form-desc">Enter your details below. We'll find your MPP and generate a personalized letter — all you have to do is hit <strong style="color:var(--cream)">Send It</strong>.</p>
+
+    <div class="field">
+      <label for="inp-name">Full Name</label>
+      <input type="text" id="inp-name" placeholder="Jane Smith" autocomplete="name">
+    </div>
+
+    <div class="field">
+      <label for="inp-email">Your Email</label>
+      <input type="email" id="inp-email" placeholder="jane@example.com" autocomplete="email">
+    </div>
+
+    <div class="field">
+      <label for="inp-postal">Ontario Postal Code</label>
+      <input type="text" id="inp-postal" placeholder="M5V 1A1" maxlength="7" autocomplete="postal-code" inputmode="text">
+    </div>
+
+    <button class="btn btn-find" id="find-btn" onclick="findMPP()">Find My MPP →</button>
+  </div>
+
+  <!-- ── Screen 2: Letter ── -->
+  <div class="screen" id="screen-letter">
+    <button class="back-btn" onclick="goBack()">← Back</button>
+
+    <div class="mpp-card">
+      <div class="mpp-label">Your MPP</div>
+      <div class="mpp-name-text" id="mpp-name-display"></div>
+      <div class="mpp-riding-text" id="mpp-riding-display"></div>
+      <div class="mpp-email-text" id="mpp-email-display"></div>
+    </div>
+
+    <div class="notice notice-warn" id="no-email-notice">
+      ⚠ We couldn't find a direct email for your MPP. You can copy this letter and send it through their official website.
+    </div>
+
+    <div class="letter-label">Your Letter <span>(feel free to edit it)</span></div>
+    <textarea id="letter-body"></textarea>
+    <p class="hint">A copy will be CC'd to your email address.</p>
+
+    <button class="btn btn-send" id="send-btn" onclick="sendLetter()">Send It ♥</button>
+  </div>
+
+  <!-- ── Screen 3: Success ── -->
+  <div class="screen" id="screen-success">
+    <div class="success-wrap">
+      <div class="success-heart">♥</div>
+      <div class="success-title">Letter Sent!</div>
+      <p class="success-body">
+        Your message has been sent to <strong id="success-mpp"></strong>.<br>
+        A copy has gone to your inbox.<br><br>
+        Thank you for speaking up. Every voice matters.
+      </p>
+      <div class="divider"></div>
+      <p class="success-body" style="font-size:0.82rem">
+        SCS saves lives. &nbsp;<strong>Care not closures. Keep our sites open.</strong>
+      </p>
+    </div>
+  </div>
+</main>
+
+<div class="tags">
+  <span class="tag">SCS Saves Lives</span>
+  <span class="tag">Care Not Closures</span>
+  <span class="tag">Keep Our Sites</span>
+</div>
+
+<footer>Stay Open, Stay Alive &middot; May 30, 2025 &middot; Metropolitan United Church, 56 Queen St. E</footer>
+
+<script>
+  var mppData = {};
+
+  function showError(msg) {
+    var el = document.getElementById('error-msg');
+    el.textContent = msg;
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function clearError() {
+    var el = document.getElementById('error-msg');
+    el.style.display = 'none';
+  }
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+    clearError();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function goBack() { showScreen('screen-form'); }
+
+  function buildLetter(name, postalCode, mppFirstName, riding) {
+    return 'Dear ' + mppFirstName + ',\n\n' +
+      'My name is ' + name + ', and I live in your riding of ' + riding + '. I\'m writing to you today because I attended the "Stay Open, Stay Alive" rally — and because I believe Ontario\'s Supervised Consumption Sites (SCS) save lives.\n\n' +
+      'The evidence is clear:\n\n' +
+      '• No one has ever died of an overdose at a supervised consumption site in Canada\'s history\n' +
+      '• These sites have reversed thousands of overdoses\n' +
+      '• They connect people to addiction treatment and recovery services\n' +
+      '• They reduce strain on emergency departments and hospitals\n' +
+      '• They make communities safer for everyone\n\n' +
+      'Closing these sites does not end drug use — it ends oversight, care, and second chances for our neighbours.\n\n' +
+      'I urge you to use your voice and your vote to protect and restore access to supervised consumption services in Ontario. The people who rely on these sites are our family members, our community members, our neighbours.\n\n' +
+      'Please fight for them. Their lives depend on it.\n\n' +
+      'Sincerely,\n' +
+      name + '\n' +
+      postalCode;
+  }
+
+  async function findMPP() {
+    clearError();
+    var name   = document.getElementById('inp-name').value.trim();
+    var email  = document.getElementById('inp-email').value.trim();
+    var postal = document.getElementById('inp-postal').value.trim();
+
+    if (!name || !email || !postal) {
+      showError('Please fill in all three fields.');
+      return;
+    }
+
+    if (!/^[a-zA-Z]\d[a-zA-Z]\s?\d[a-zA-Z]\d$/.test(postal)) {
+      showError('Please enter a valid Ontario postal code (e.g. M5V 1A1).');
+      return;
+    }
+
+    var btn = document.getElementById('find-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Finding your MPP\u2026';
+
+    try {
+      var resp = await fetch('/api/lookup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postalCode: postal })
+      });
+      var data = await resp.json();
+
+      if (!resp.ok) {
+        showError(data.error || 'Failed to find your MPP. Please check your postal code.');
+        return;
+      }
+
+      mppData = {
+        name:       data.name,
+        email:      data.email,
+        riding:     data.riding,
+        party:      data.party,
+        userEmail:  email,
+        userName:   name,
+        postalCode: postal
+      };
+
+      var firstName = data.name.split(' ')[0];
+      var partyStr  = data.party ? ' (' + data.party + ')' : '';
+
+      document.getElementById('mpp-name-display').textContent  = data.name + partyStr;
+      document.getElementById('mpp-riding-display').textContent = data.riding;
+
+      var emailEl = document.getElementById('mpp-email-display');
+      var noEmail = document.getElementById('no-email-notice');
+
+      if (data.email) {
+        emailEl.textContent    = data.email;
+        noEmail.style.display  = 'none';
+      } else {
+        emailEl.textContent    = '';
+        noEmail.style.display  = 'block';
+      }
+
+      document.getElementById('letter-body').value = buildLetter(name, postal, firstName, data.riding);
+      showScreen('screen-letter');
+
+    } catch (err) {
+      showError('Something went wrong. Please try again.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Find My MPP \u2192';
+    }
+  }
+
+  async function sendLetter() {
+    clearError();
+    var letter = document.getElementById('letter-body').value.trim();
+
+    if (!letter) {
+      showError('Your letter is empty.');
+      return;
+    }
+
+    if (!mppData.email) {
+      showError('No email address found for your MPP. Please copy the letter and contact them through their official website.');
+      return;
+    }
+
+    var btn = document.getElementById('send-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Sending\u2026';
+
+    try {
+      var resp = await fetch('/api/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name:       mppData.userName,
+          email:      mppData.userEmail,
+          postalCode: mppData.postalCode,
+          mppName:    mppData.name,
+          mppEmail:   mppData.email,
+          riding:     mppData.riding,
+          letter:     letter
+        })
+      });
+
+      var data = await resp.json();
+
+      if (!resp.ok) {
+        showError(data.error || 'Failed to send. Please try again.');
+        return;
+      }
+
+      document.getElementById('success-mpp').textContent = mppData.name;
+      showScreen('screen-success');
+
+    } catch (err) {
+      showError('Something went wrong. Please try again.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Send It \u2665';
+    }
+  }
+
+  // Auto-format postal code as user types
+  document.getElementById('inp-postal').addEventListener('input', function() {
+    var v = this.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 6);
+    if (v.length > 3) v = v.slice(0, 3) + ' ' + v.slice(3);
+    this.value = v;
+  });
+
+  // Enter key submits form
+  ['inp-name', 'inp-email', 'inp-postal'].forEach(function(id) {
+    document.getElementById(id).addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') findMPP();
+    });
+  });
+</script>
+
+</body>
+</html>

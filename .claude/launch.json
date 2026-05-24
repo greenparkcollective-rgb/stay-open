@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "stay-open",
+      "runtimeExecutable": "/Users/mohammedeltayeb/node-local/bin/node",
+      "runtimeArgs": ["server.mjs"],
+      "port": 3001
+    }
+  ]
+}

@@ -409,11 +409,12 @@
       <div class="success-title">One Tap Left</div>
       <p class="success-body">
         Your letter is ready for <strong id="success-mpp"></strong>.<br>
-        Tap the button below to open your email app — everything is pre-filled, just hit Send.
+        Tap below — everything is pre-filled, just hit Send.
       </p>
-      <a id="mailto-btn" href="#" style="
+
+      <a id="gmail-btn" href="#" target="_blank" style="
         display:block;
-        margin:1.5rem 0;
+        margin:1.5rem 0 0.75rem;
         padding:1.1rem;
         background:var(--pink);
         color:#fff;
@@ -423,7 +424,23 @@
         font-size:1.2rem;
         letter-spacing:0.08em;
         text-decoration:none;
-      ">Open Email App ♥</a>
+      ">Send via Gmail ♥</a>
+
+      <a id="mailto-btn" href="#" style="
+        display:block;
+        padding:0.85rem;
+        background:var(--surface);
+        border:1px solid var(--border);
+        color:var(--muted);
+        text-align:center;
+        border-radius:8px;
+        font-family:'Anton',sans-serif;
+        font-size:0.95rem;
+        letter-spacing:0.06em;
+        text-decoration:none;
+        margin-bottom:1.5rem;
+      ">Other Email App</a>
+
       <div class="divider"></div>
       <p class="success-body" style="font-size:0.82rem">
         SCS saves lives. &nbsp;<strong>Care not closures. Keep our sites open.</strong>
@@ -584,12 +601,20 @@
       })
     }).catch(function() {});
 
-    // Build mailto link and set it on the button — user taps it directly (no shady dialog)
     var subject = 'Please Protect Ontario\u2019s Supervised Consumption Sites \u2014 Constituent from ' + mppData.riding;
+
+    // Gmail compose URL — opens Gmail app directly, no scary dialog
+    var gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1'
+      + '&to=' + encodeURIComponent(mppData.email)
+      + '&su=' + encodeURIComponent(subject)
+      + '&body=' + encodeURIComponent(letter);
+
+    // Fallback mailto for non-Gmail users
     var mailtoUrl = 'mailto:' + mppData.email
       + '?subject=' + encodeURIComponent(subject)
       + '&body=' + encodeURIComponent(letter);
 
+    document.getElementById('gmail-btn').href = gmailUrl;
     document.getElementById('mailto-btn').href = mailtoUrl;
     document.getElementById('success-mpp').textContent = mppData.name;
     showScreen('screen-success');

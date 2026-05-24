@@ -397,9 +397,9 @@
 
     <div class="letter-label">Your Letter <span>(feel free to edit it)</span></div>
     <textarea id="letter-body"></textarea>
-    <p class="hint">Clicking Send It will open your email app with everything pre-filled — just hit send.</p>
+    <p class="hint">Your email app will open with everything pre-filled — just hit send.</p>
 
-    <button class="btn btn-send" id="send-btn" onclick="sendLetter()">Send It ♥</button>
+    <a class="btn btn-send" id="send-link" href="#" onclick="return handleSend(this)">Send It ♥</a>
   </div>
 
   <!-- ── Screen 3: Success ── -->
@@ -569,57 +569,30 @@
     }
   }
 
-  async function sendLetter() {
+  function handleSend(el) {
     clearError();
     var letter = document.getElementById('letter-body').value.trim();
 
-    if (!letter) {
-      showError('Your letter is empty.');
-      return;
-    }
+    if (!letter) { showError('Your letter is empty.'); return false; }
+    if (!mppData.email) { showError('No email found for your MPP.'); return false; }
 
-    if (!mppData.email) {
-      showError('No email address found for your MPP. Please copy the letter and contact them through their official website.');
-      return;
-    }
+    var subject = 'Please Protect Ontario\u2019s Supervised Consumption Sites \u2014 Constituent from ' + mppData.riding;
+    el.href = 'mailto:' + mppData.email
+      + '?subject=' + encodeURIComponent(subject)
+      + '&body=' + encodeURIComponent(letter);
 
-    var btn = document.getElementById('send-btn');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>Opening email\u2026';
-
-    // Log submission to server (fire and forget)
+    // Log to server in background
     fetch('/api/send', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name:       mppData.userName,
-        email:      mppData.userEmail,
-        postalCode: mppData.postalCode,
-        mppName:    mppData.name,
-        mppEmail:   mppData.email,
-        riding:     mppData.riding
+        name: mppData.userName, email: mppData.userEmail,
+        postalCode: mppData.postalCode, mppName: mppData.name,
+        mppEmail: mppData.email, riding: mppData.riding
       })
     }).catch(function() {});
 
-    var subject = 'Please Protect Ontario\u2019s Supervised Consumption Sites \u2014 Constituent from ' + mppData.riding;
-
-    // Gmail compose URL — opens Gmail app directly, no scary dialog
-    var gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1'
-      + '&to=' + encodeURIComponent(mppData.email)
-      + '&su=' + encodeURIComponent(subject)
-      + '&body=' + encodeURIComponent(letter);
-
-    // Fallback mailto for non-Gmail users
-    var mailtoUrl = 'mailto:' + mppData.email
-      + '?subject=' + encodeURIComponent(subject)
-      + '&body=' + encodeURIComponent(letter);
-
-    document.getElementById('gmail-btn').href = gmailUrl;
-    document.getElementById('mailto-btn').href = mailtoUrl;
-    document.getElementById('success-mpp').textContent = mppData.name;
-    showScreen('screen-success');
-    btn.disabled = false;
-    btn.textContent = 'Send It \u2665';
+    return true; // let the link follow naturally — no iOS dialog
   }
 
   // Auto-format postal code as user types

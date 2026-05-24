@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Stay Open, Stay Alive — Contact Your MPP</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Lato:wght@400;700&display=swap" rel="stylesheet">
@@ -18,30 +18,33 @@
       --gold: #c9820a;
       --muted: #8a7f6e;
       --border: #2e2820;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
+
+    html, body { height: 100%; }
 
     body {
       background: var(--bg);
       color: var(--cream);
       font-family: 'Lato', sans-serif;
-      min-height: 100vh;
+      min-height: 100%;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      -webkit-text-size-adjust: 100%;
     }
 
     /* ── Header ── */
     header {
-      width: 100%;
       text-align: center;
-      padding: 2.5rem 1rem 1.75rem;
+      padding: 1.25rem 1rem 1rem;
       border-bottom: 1px solid var(--border);
       background: radial-gradient(ellipse at top, #1f0d10 0%, var(--bg) 70%);
+      flex-shrink: 0;
     }
 
     .headline {
       font-family: 'Anton', sans-serif;
-      font-size: clamp(2.2rem, 10vw, 4rem);
+      font-size: clamp(1.8rem, 8vw, 3rem);
       letter-spacing: 0.03em;
       line-height: 1;
     }
@@ -50,31 +53,22 @@
     .headline .line2 { color: var(--pink); }
 
     .subhead {
-      font-size: clamp(0.7rem, 2vw, 0.875rem);
+      font-size: clamp(0.65rem, 2.2vw, 0.8rem);
       color: var(--teal);
-      letter-spacing: 0.12em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      margin-top: 0.6rem;
+      margin-top: 0.4rem;
     }
 
     .event-info {
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       color: var(--muted);
-      margin-top: 0.3rem;
-      letter-spacing: 0.04em;
-    }
-
-    /* ── Main ── */
-    main {
-      width: 100%;
-      max-width: 540px;
-      padding: 2rem 1.5rem 1rem;
-      flex: 1;
+      margin-top: 0.2rem;
     }
 
     /* ── Screens ── */
-    .screen { display: none; }
-    .screen.active { display: block; }
+    .screen { display: none; flex-direction: column; flex: 1; }
+    .screen.active { display: flex; }
 
     /* ── Error ── */
     .error-box {
@@ -84,27 +78,36 @@
       padding: 0.75rem 1rem;
       border-radius: 8px;
       font-size: 0.875rem;
-      margin-bottom: 1.25rem;
+      margin: 0 1rem 0.75rem;
       display: none;
+      flex-shrink: 0;
     }
 
     /* ── Form screen ── */
+    #screen-form {
+      padding: 1.5rem 1rem;
+      padding-bottom: calc(1.5rem + var(--safe-bottom));
+      max-width: 540px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
     .form-title {
       font-family: 'Anton', sans-serif;
-      font-size: 1.1rem;
+      font-size: 1rem;
       letter-spacing: 0.06em;
       color: var(--teal);
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.3rem;
     }
 
     .form-desc {
-      font-size: 0.875rem;
+      font-size: 0.85rem;
       color: var(--muted);
-      line-height: 1.65;
-      margin-bottom: 1.75rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
     }
 
-    .field { margin-bottom: 1.1rem; }
+    .field { margin-bottom: 1rem; }
 
     label {
       display: block;
@@ -120,9 +123,9 @@
       background: var(--surface);
       border: 1px solid var(--border);
       color: var(--cream);
-      padding: 0.9rem 1rem;
+      padding: 0.85rem 1rem;
       border-radius: 8px;
-      font-size: 1rem;
+      font-size: 16px; /* prevents iOS zoom */
       font-family: inherit;
       outline: none;
       transition: border-color 0.18s;
@@ -134,92 +137,111 @@
 
     /* ── Buttons ── */
     .btn {
+      display: block;
       width: 100%;
       padding: 1rem;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-family: 'Anton', sans-serif;
       font-size: 1.15rem;
       letter-spacing: 0.08em;
       cursor: pointer;
+      text-align: center;
+      text-decoration: none;
       transition: opacity 0.18s, transform 0.1s;
       -webkit-appearance: none;
+      min-height: 54px;
+      line-height: 1.2;
     }
 
-    .btn:active { transform: scale(0.98); }
+    .btn:active { transform: scale(0.98); opacity: 0.85; }
     .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
     .btn-find {
       background: var(--teal);
       color: #0d0b08;
-      margin-top: 0.5rem;
+      margin-top: 0.75rem;
     }
 
     .btn-send {
       background: var(--pink);
       color: #fff;
       font-size: 1.2rem;
-      margin-top: 1.25rem;
     }
 
     /* ── Letter screen ── */
+    #screen-letter {
+      overflow: hidden; /* children handle their own scroll */
+    }
+
+    .letter-scroll {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 1rem 1rem 0;
+      max-width: 540px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
     .back-btn {
       background: none;
       border: none;
       color: var(--muted);
       font-size: 0.875rem;
       cursor: pointer;
-      padding: 0;
-      margin-bottom: 1.5rem;
+      padding: 0.5rem 0;
+      margin-bottom: 1rem;
       font-family: inherit;
       display: inline-flex;
       align-items: center;
       gap: 0.3rem;
+      min-height: 44px;
     }
 
-    .back-btn:hover { color: var(--cream); }
+    .back-btn:active { color: var(--cream); }
 
     .mpp-card {
       background: var(--surface);
       border: 1px solid var(--teal);
       border-radius: 10px;
-      padding: 1rem 1.25rem;
-      margin-bottom: 1.5rem;
+      padding: 0.85rem 1rem;
+      margin-bottom: 1rem;
     }
 
     .mpp-label {
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--teal);
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.2rem;
     }
 
     .mpp-name-text {
       font-family: 'Anton', sans-serif;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       letter-spacing: 0.03em;
       color: var(--cream);
     }
 
     .mpp-riding-text {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--muted);
-      margin-top: 0.15rem;
+      margin-top: 0.1rem;
     }
 
     .mpp-email-text {
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       color: var(--teal);
-      margin-top: 0.25rem;
+      margin-top: 0.2rem;
       word-break: break-all;
     }
 
     .notice {
-      padding: 0.75rem 1rem;
+      padding: 0.65rem 0.85rem;
       border-radius: 8px;
-      font-size: 0.8rem;
-      margin-bottom: 1.25rem;
+      font-size: 0.78rem;
+      margin-bottom: 1rem;
       display: none;
     }
 
@@ -230,11 +252,11 @@
     }
 
     .letter-label {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
     }
 
     .letter-label span {
@@ -248,71 +270,83 @@
       background: var(--surface);
       border: 1px solid var(--border);
       color: var(--cream);
-      padding: 1rem;
+      padding: 0.85rem;
       border-radius: 8px;
-      font-size: 0.9rem;
+      font-size: 15px;
       font-family: Georgia, serif;
-      line-height: 1.75;
-      resize: vertical;
-      min-height: 340px;
+      line-height: 1.7;
+      resize: none;
+      height: 220px;
       outline: none;
       transition: border-color 0.18s;
+      -webkit-appearance: none;
     }
 
     textarea:focus { border-color: var(--teal); }
 
+    /* ── Sticky send bar ── */
+    .send-bar {
+      flex-shrink: 0;
+      padding: 0.75rem 1rem;
+      padding-bottom: calc(0.75rem + var(--safe-bottom));
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      max-width: 540px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
     .hint {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--muted);
-      margin-top: 0.5rem;
+      text-align: center;
+      margin-bottom: 0.5rem;
     }
 
     /* ── Success screen ── */
-    .success-wrap {
+    #screen-success {
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 1.5rem;
+      padding-bottom: calc(2rem + var(--safe-bottom));
       text-align: center;
-      padding: 3rem 0 2rem;
     }
 
     .success-heart {
-      font-size: 3.5rem;
-      line-height: 1;
-      margin-bottom: 1rem;
+      font-size: 3rem;
       color: var(--pink);
+      margin-bottom: 0.75rem;
     }
 
     .success-title {
       font-family: 'Anton', sans-serif;
-      font-size: 2.2rem;
+      font-size: 2rem;
       letter-spacing: 0.05em;
       color: var(--teal);
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
     }
 
     .success-body {
       color: var(--muted);
       line-height: 1.75;
       font-size: 0.95rem;
+      max-width: 340px;
     }
 
     .success-body strong { color: var(--cream); }
 
-    .divider {
-      height: 1px;
-      background: var(--border);
-      margin: 1.75rem 0;
-    }
-
-    /* ── Footer tags ── */
+    /* ── Footer ── */
     .tags {
       display: flex;
-      gap: 1.25rem;
+      gap: 1rem;
       justify-content: center;
       flex-wrap: wrap;
-      padding: 1.5rem 1rem 0.5rem;
+      padding: 1rem;
+      flex-shrink: 0;
     }
 
     .tag {
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--muted);
@@ -322,9 +356,10 @@
 
     footer {
       text-align: center;
-      padding: 1.25rem 1rem 2rem;
-      font-size: 0.72rem;
+      padding: 0.5rem 1rem 1rem;
+      font-size: 0.68rem;
       color: var(--muted);
+      flex-shrink: 0;
     }
 
     /* ── Spinner ── */
@@ -354,34 +389,35 @@
   <div class="event-info">May 30th · Metropolitan United Church · 2PM</div>
 </header>
 
-<main>
+<!-- ── Screen 1: Form ── -->
+<div class="screen active" id="screen-form">
   <div class="error-box" id="error-msg"></div>
+  <p class="form-title">Contact Your MPP</p>
+  <p class="form-desc">Fill in your details — we'll find your MPP and generate a letter ready to send.</p>
 
-  <!-- ── Screen 1: Form ── -->
-  <div class="screen active" id="screen-form">
-    <p class="form-title">Contact Your MPP Today</p>
-    <p class="form-desc">Enter your details below. We'll find your MPP and generate a personalized letter — all you have to do is hit <strong style="color:var(--cream)">Send It</strong>.</p>
-
-    <div class="field">
-      <label for="inp-name">Full Name</label>
-      <input type="text" id="inp-name" placeholder="Jane Smith" autocomplete="name">
-    </div>
-
-    <div class="field">
-      <label for="inp-email">Your Email</label>
-      <input type="email" id="inp-email" placeholder="jane@example.com" autocomplete="email">
-    </div>
-
-    <div class="field">
-      <label for="inp-postal">Ontario Postal Code</label>
-      <input type="text" id="inp-postal" placeholder="M5V 1A1" maxlength="7" autocomplete="postal-code" inputmode="text">
-    </div>
-
-    <button class="btn btn-find" id="find-btn" onclick="findMPP()">Find My MPP →</button>
+  <div class="field">
+    <label for="inp-name">Full Name</label>
+    <input type="text" id="inp-name" placeholder="Jane Smith" autocomplete="name">
   </div>
 
-  <!-- ── Screen 2: Letter ── -->
-  <div class="screen" id="screen-letter">
+  <div class="field">
+    <label for="inp-email">Your Email</label>
+    <input type="email" id="inp-email" placeholder="jane@example.com" autocomplete="email">
+  </div>
+
+  <div class="field">
+    <label for="inp-postal">Ontario Postal Code</label>
+    <input type="text" id="inp-postal" placeholder="M5V 1A1" maxlength="7" autocomplete="postal-code" inputmode="text">
+  </div>
+
+  <button class="btn btn-find" id="find-btn" onclick="findMPP()">Find My MPP →</button>
+</div>
+
+<!-- ── Screen 2: Letter ── -->
+<div class="screen" id="screen-letter">
+  <div class="error-box" id="error-msg-letter"></div>
+
+  <div class="letter-scroll">
     <button class="back-btn" onclick="goBack()">← Back</button>
 
     <div class="mpp-card">
@@ -392,62 +428,28 @@
     </div>
 
     <div class="notice notice-warn" id="no-email-notice">
-      ⚠ We couldn't find a direct email for your MPP. You can copy this letter and send it through their official website.
+      ⚠ No direct email found. Copy this letter and contact your MPP through their official website.
     </div>
 
-    <div class="letter-label">Your Letter <span>(feel free to edit it)</span></div>
+    <div class="letter-label">Your Letter <span>(feel free to edit)</span></div>
     <textarea id="letter-body"></textarea>
-    <p class="hint">Your email app will open with everything pre-filled — just hit send.</p>
+  </div>
 
+  <div class="send-bar">
+    <p class="hint">Your email app will open with everything pre-filled.</p>
     <a class="btn btn-send" id="send-link" href="#" onclick="return handleSend(this)">Send It ♥</a>
   </div>
+</div>
 
-  <!-- ── Screen 3: Success ── -->
-  <div class="screen" id="screen-success">
-    <div class="success-wrap">
-      <div class="success-heart">♥</div>
-      <div class="success-title">One Tap Left</div>
-      <p class="success-body">
-        Your letter is ready for <strong id="success-mpp"></strong>.<br>
-        Tap below — everything is pre-filled, just hit Send.
-      </p>
-
-      <a id="gmail-btn" href="#" target="_blank" style="
-        display:block;
-        margin:1.5rem 0 0.75rem;
-        padding:1.1rem;
-        background:var(--pink);
-        color:#fff;
-        text-align:center;
-        border-radius:8px;
-        font-family:'Anton',sans-serif;
-        font-size:1.2rem;
-        letter-spacing:0.08em;
-        text-decoration:none;
-      ">Send via Gmail ♥</a>
-
-      <a id="mailto-btn" href="#" style="
-        display:block;
-        padding:0.85rem;
-        background:var(--surface);
-        border:1px solid var(--border);
-        color:var(--muted);
-        text-align:center;
-        border-radius:8px;
-        font-family:'Anton',sans-serif;
-        font-size:0.95rem;
-        letter-spacing:0.06em;
-        text-decoration:none;
-        margin-bottom:1.5rem;
-      ">Other Email App</a>
-
-      <div class="divider"></div>
-      <p class="success-body" style="font-size:0.82rem">
-        SCS saves lives. &nbsp;<strong>Care not closures. Keep our sites open.</strong>
-      </p>
-    </div>
-  </div>
-</main>
+<!-- ── Screen 3: Done ── -->
+<div class="screen" id="screen-success">
+  <div class="success-heart">♥</div>
+  <div class="success-title">Letter Sent!</div>
+  <p class="success-body">
+    Your email to <strong id="success-mpp"></strong> is on its way.<br><br>
+    Thank you for speaking up — every voice matters.
+  </p>
+</div>
 
 <div class="tags">
   <span class="tag">SCS Saves Lives</span>
@@ -455,35 +457,37 @@
   <span class="tag">Keep Our Sites</span>
 </div>
 
-<footer>Stay Open, Stay Alive &middot; May 30, 2025 &middot; Metropolitan United Church, 56 Queen St. E</footer>
+<footer>Stay Open, Stay Alive &middot; May 30, 2025 &middot; Metropolitan United Church</footer>
 
 <script>
   var mppData = {};
 
-  function showError(msg) {
-    var el = document.getElementById('error-msg');
+  function showError(msg, screenId) {
+    var id = screenId === 'letter' ? 'error-msg-letter' : 'error-msg';
+    var el = document.getElementById(id);
     el.textContent = msg;
     el.style.display = 'block';
-    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  function clearError() {
-    var el = document.getElementById('error-msg');
-    el.style.display = 'none';
+  function clearErrors() {
+    ['error-msg', 'error-msg-letter'].forEach(function(id) {
+      var el = document.getElementById(id);
+      el.style.display = 'none';
+    });
   }
 
   function showScreen(id) {
     document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
     document.getElementById(id).classList.add('active');
-    clearError();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    clearErrors();
+    window.scrollTo(0, 0);
   }
 
   function goBack() { showScreen('screen-form'); }
 
   function buildLetter(name, postalCode, mppFirstName, riding) {
     return 'Dear ' + mppFirstName + ',\n\n' +
-      'My name is ' + name + ', and I live in your riding of ' + riding + '. I\'m writing to you today because I attended the "Stay Open, Stay Alive" rally — and because I believe Ontario\'s Supervised Consumption Sites (SCS) save lives.\n\n' +
+      'My name is ' + name + ', and I live in your riding of ' + riding + '. I\'m writing today because I attended the "Stay Open, Stay Alive" rally — and because I believe Ontario\'s Supervised Consumption Sites (SCS) save lives.\n\n' +
       'The evidence is clear:\n\n' +
       '• No one has ever died of an overdose at a supervised consumption site in Canada\'s history\n' +
       '• These sites have reversed thousands of overdoses\n' +
@@ -499,16 +503,12 @@
   }
 
   async function findMPP() {
-    clearError();
+    clearErrors();
     var name   = document.getElementById('inp-name').value.trim();
     var email  = document.getElementById('inp-email').value.trim();
     var postal = document.getElementById('inp-postal').value.trim();
 
-    if (!name || !email || !postal) {
-      showError('Please fill in all three fields.');
-      return;
-    }
-
+    if (!name || !email || !postal) { showError('Please fill in all three fields.'); return; }
     if (!/^[a-zA-Z]\d[a-zA-Z]\s?\d[a-zA-Z]\d$/.test(postal)) {
       showError('Please enter a valid Ontario postal code (e.g. M5V 1A1).');
       return;
@@ -516,7 +516,7 @@
 
     var btn = document.getElementById('find-btn');
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>Finding your MPP\u2026';
+    btn.innerHTML = '<span class="spinner"></span>Finding\u2026';
 
     try {
       var resp = await fetch('/api/lookup', {
@@ -526,37 +526,19 @@
       });
       var data = await resp.json();
 
-      if (!resp.ok) {
-        showError(data.error || 'Failed to find your MPP. Please check your postal code.');
-        return;
-      }
+      if (!resp.ok) { showError(data.error || 'Could not find MPP. Check your postal code.'); return; }
 
-      mppData = {
-        name:       data.name,
-        email:      data.email,
-        riding:     data.riding,
-        party:      data.party,
-        userEmail:  email,
-        userName:   name,
-        postalCode: postal
-      };
+      mppData = { name: data.name, email: data.email, riding: data.riding,
+                  party: data.party, userEmail: email, userName: name, postalCode: postal };
 
       var firstName = data.name.split(' ')[0];
-      var partyStr  = data.party ? ' (' + data.party + ')' : '';
-
-      document.getElementById('mpp-name-display').textContent  = data.name + partyStr;
+      document.getElementById('mpp-name-display').textContent  = data.name + (data.party ? ' (' + data.party + ')' : '');
       document.getElementById('mpp-riding-display').textContent = data.riding;
 
       var emailEl = document.getElementById('mpp-email-display');
       var noEmail = document.getElementById('no-email-notice');
-
-      if (data.email) {
-        emailEl.textContent    = data.email;
-        noEmail.style.display  = 'none';
-      } else {
-        emailEl.textContent    = '';
-        noEmail.style.display  = 'block';
-      }
+      if (data.email) { emailEl.textContent = data.email; noEmail.style.display = 'none'; }
+      else            { emailEl.textContent = ''; noEmail.style.display = 'block'; }
 
       document.getElementById('letter-body').value = buildLetter(name, postal, firstName, data.riding);
       showScreen('screen-letter');
@@ -570,39 +552,38 @@
   }
 
   function handleSend(el) {
-    clearError();
+    clearErrors();
     var letter = document.getElementById('letter-body').value.trim();
-
-    if (!letter) { showError('Your letter is empty.'); return false; }
-    if (!mppData.email) { showError('No email found for your MPP.'); return false; }
+    if (!letter)        { showError('Your letter is empty.', 'letter'); return false; }
+    if (!mppData.email) { showError('No email found for your MPP.', 'letter'); return false; }
 
     var subject = 'Please Protect Ontario\u2019s Supervised Consumption Sites \u2014 Constituent from ' + mppData.riding;
     el.href = 'mailto:' + mppData.email
       + '?subject=' + encodeURIComponent(subject)
       + '&body=' + encodeURIComponent(letter);
 
-    // Log to server in background
     fetch('/api/send', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: mppData.userName, email: mppData.userEmail,
+      body: JSON.stringify({ name: mppData.userName, email: mppData.userEmail,
         postalCode: mppData.postalCode, mppName: mppData.name,
-        mppEmail: mppData.email, riding: mppData.riding
-      })
+        mppEmail: mppData.email, riding: mppData.riding })
     }).catch(function() {});
 
-    return true; // let the link follow naturally — no iOS dialog
+    setTimeout(function() {
+      document.getElementById('success-mpp').textContent = mppData.name;
+      showScreen('screen-success');
+    }, 500);
+
+    return true;
   }
 
-  // Auto-format postal code as user types
   document.getElementById('inp-postal').addEventListener('input', function() {
     var v = this.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 6);
     if (v.length > 3) v = v.slice(0, 3) + ' ' + v.slice(3);
     this.value = v;
   });
 
-  // Enter key submits form
   ['inp-name', 'inp-email', 'inp-postal'].forEach(function(id) {
     document.getElementById(id).addEventListener('keydown', function(e) {
       if (e.key === 'Enter') findMPP();
